@@ -24,5 +24,5 @@ $response = Invoke-RestMethod -Uri $url -method $method -headers $hdrs -ContentT
 # PROCESS RESPONSE
 
 Write-host "[INFO] Writing response to output file $path with timestamp $timestamp" -ForegroundColor cyan
-$response | Write-Output | OUT-file -filepath $path 
+$response | ConvertTo-JSON | Write-Output | OUT-file -filepath $path 
 Write-host "[OPERATION COMPLETE]" -ForegroundColor green
