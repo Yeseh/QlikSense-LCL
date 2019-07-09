@@ -14,7 +14,7 @@ Feel free to make suggestions and ask questions!
 
 ## How to use
 
-1. Download or copy the most recent release from the [/resources/Releases](resources/releases) folder.
+1. Download or copy the most recent release from the [/resources/Releases](https://github.com/Yeseh/QlikSense-LCL/tree/master/Resources/Releases) folder.
 2. Configure the three variables listed above to suit your Qlik Sense server environment.
 3. Test the script by placing some files in the folder and executing the script.
 4. Schedule the execution of the script. Ensure the user executing the script has read & update rights on the content library.
