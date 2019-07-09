@@ -1,4 +1,4 @@
-## POWERSHELL CONTENT LIBRARY UPLOADER V1.0
+## QLIK SENSE LOCAL CONTENT LIBRARY V1.0
   
 This script calls the Qlik Sense Engine API to upload files from a local folder to a content library. It is mainly intended to enable the hosting of local JSON, HTML or other REST files on the Qlik Sense server without configuring an additional webserver, with the additional benefit of being able to maintain a content library locally. 
 
