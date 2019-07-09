@@ -16,14 +16,15 @@
 #  REQUEST CONFIGURATION
 
 ## USER CONFIGURATION
-$qsServer = "JWIS07QS"                                                                    # Computer name or proxy address of the QS Server
-$inputfolder = "C:\Users\Jesse\Documents\Repo\QSContentlib\Resources\LocalContentLibrary" # Local folder path for input
-$libname = "DBAChecks"                                                                    # Name of existing QS content library to store output
+$qsServer = "<Servername>"                                                                # Computer name or proxy address of the QS Server
+$inputfolder = "<Input path>"                                                             # Local folder path for input
+$libname = "<Content library name>"                                                       # Name of existing QS content library to store output
 
 ## AUTHENTICATION & AUTHORISATION
 $hdrs = @{}                                                                               # Creation of request headers hashtable
 $xrfkey = "Xrfkey=12345678qwertyui"                                                       # XrfKey request url parameter
 $hdrs.add("X-Qlik-xrfkey", "12345678qwertyui")                                            # XrfKey header
+$hdrs.add("Accept", "application/json")
 
 ## GETTING AND STORING SESSION COOKIE FOR WINDOWS AUTHENTICATION
 $getUrl = "https://$qsServer/qrs/about?$xrfkey"
@@ -31,30 +32,32 @@ Invoke-RestMethod -verbose -UseDefaultCredentials -Uri $geturl -Method Get -Head
 $cookies = $websession.Cookies.GetCookies($geturl)
 $session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
 $session.Cookies.Add($cookies);
-if($session) {write-host "[INFO] SESSION COOKIE STORED" -foregroundcolor green}    
+if($session) {write-host "[INFO] SESSION COOKIE STORED" -foregroundcolor green}          
 
 
 # BUILD CONTENT LIBRARY
 
-## GET LIST OF CURRENT CONTENT IN CONTENT LIBRARY
+## GET LIST OF CURRENT CONTENT IN LIBRARY
 $getUrl = "https://$qsServer/qrs/staticcontent/enumeratefiles?path=/content/$libname&$xrfkey"
 $contentEnum = Invoke-RestMethod -verbose -Uri $getUrl -method get -headers $hdrs -ContentType  'application/json' -UseDefaultCredentials -websession $session 
 if($contentEnum) {write-host "[INFO] CONTENT FETCHED FOR CONTENTLIBRARY $libname" -ForegroundColor Green }
 
 ## EMPTY CONTENT LIBRARY
 foreach($i in $contentEnum){
+    write-host $i.path -ForegroundColor Yellow
     $deleteContent = [System.io.path]::GetFileName($i.path)
     $deleteUrl = "https://$qsServer/qrs/contentlibrary/$libname/deletecontent?externalpath=$deletecontent&$xrfkey"
-    if($deletecontent -and $posturl) {write-host "[INFO] FILE $deleteContent successfully deleted" -ForegroundColor yellow }
+    if($deletecontent -and $posturl) {write-host "[INFO] FILE $deleteContent successfully deleted" -ForegroundColor magenta }
     Invoke-RestMethod -verbose -Uri $deleteurl -method delete -headers $hdrs  -ContentType  'application/json' -UseDefaultCredentials -websession $session
-    }
+}
 
 # UPLOAD FILES FROM INPUT FOLDER TO CONTENTLIBRARY
-Get-ChildItem $inputfolder | where {$_.extension -eq ".json"} | 
+Get-ChildItem $inputfolder | where {($_.extension -eq ".json") -and !($_.BaseName -eq "content")} | 
 Foreach-Object {
     $postContent = $_.basename + $_.Extension
     $postUrl = "https://$qsServer/qrs/contentlibrary/$libname/uploadfile?externalpath=$postContent&overwrite=true&$xrfkey"
-    if($postContent -and $postUrl) {write-host "[INFO] UPLOAD SUCCESSFUL FOR FILE $CONTENT" -ForegroundColor Green }
+    if($postContent -and $postUrl) {write-host "[INFO] URL CREATED FOR FILE $CONTENT" -ForegroundColor Green }
     else {write-host "[ERROR] COULD NOT CREATE URL OR CONTENT" -foregroundcolor red}         
     Invoke-RestMethod -verbose -Uri $postUrl -method post -headers $hdrs -Infile $postcontent -ContentType  'application/json' -UseDefaultCredentials -websession $session
+}
 
