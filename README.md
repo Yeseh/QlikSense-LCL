@@ -2,7 +2,7 @@
   
 This script calls the Qlik Sense Engine API to upload files from a local folder to a content library. It is mainly intended to enable the hosting of local JSON, HTML or other REST files on the Qlik Sense server without configuring an additional webserver, with the additional benefit of being able to maintain a content library locally. 
 
-The script first gets API info to establish a user session. Then the existing contentlibrary is emptied and the files in the local storages are reuploaded.
+The script first gets API info to establish a user session. Then the existing contentlibrary is emptied and the files in the local folder are reuploaded.
 
 For this script to work, 3 variables need to be defined:
     
