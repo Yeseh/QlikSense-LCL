@@ -19,4 +19,4 @@ Feel free to make suggestions and ask questions!
 3. Test the script by placing some files in the folder and executing the script.
 4. Schedule the execution of the script. Ensure the user executing the script has read & update rights on the content library.
 
-WARNING: The script empties a content library before reuploading. It is strongly recommended to create a dedicated content library for the files that need to be hosted.
+### WARNING: The script empties a content library before reuploading. It is strongly recommended to create a dedicated content library for the files that need to be hosted.
